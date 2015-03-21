@@ -572,7 +572,20 @@ public class BussLeadController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(params = "bussLeadDistribute")
-	public ModelAndView bussLeadDistribute(HttpServletRequest request) {
+	public ModelAndView bussLeadDistribute(HttpServletRequest request ,String ids) {
+		request.setAttribute("ids", ids);
 		return new ModelAndView("com/lead/distribute");
+	}
+	@RequestMapping(params = "dodistribute")
+	@ResponseBody
+	public AjaxJson dodistribute(HttpServletRequest request){
+		String leadIds = request.getParameter("leadIds"); //分享资源ID
+		String userIds = request.getParameter("userids"); //被分享用户ID
+		String depId = request.getParameter("depid"); //分享至部门ID
+		TSUser user = (TSUser)request.getSession().getAttribute("USER");//分享者
+		AjaxJson j = new AjaxJson();
+		
+		
+		return j;
 	}
 }
