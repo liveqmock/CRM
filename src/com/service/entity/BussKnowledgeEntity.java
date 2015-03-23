@@ -1,12 +1,18 @@
 package com.service.entity;
 
+import java.util.ArrayList;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.jeecgframework.web.system.pojo.base.TSType;
 
 /**   
  * @Title: Entity
@@ -32,7 +38,8 @@ public class BussKnowledgeEntity implements java.io.Serializable {
 	private java.util.Date creatdate;
 	/**创建人*/
 	private java.lang.String creatby;
-	
+	/**知识库类型*/
+	private TSType TSType;
 	/**
 	 *方法: 取得java.lang.String
 	 *@return: java.lang.String  主键
@@ -131,5 +138,15 @@ public class BussKnowledgeEntity implements java.io.Serializable {
 	 */
 	public void setCreatby(java.lang.String creatby){
 		this.creatby = creatby;
+	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "typeid")
+	public TSType getTSType() {
+		return this.TSType;
+	}
+
+	public void setTSType(TSType TSType) {
+		this.TSType = TSType;
 	}
 }

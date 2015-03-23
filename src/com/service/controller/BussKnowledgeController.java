@@ -13,6 +13,7 @@ import org.jeecgframework.core.common.model.json.DataGrid;
 import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.core.util.StringUtil;
+import org.jeecgframework.core.util.oConvertUtils;
 import org.jeecgframework.tag.core.easyui.TagUtil;
 import org.jeecgframework.web.system.pojo.base.TSTypegroup;
 import org.jeecgframework.web.system.service.SystemService;
@@ -57,18 +58,41 @@ public class BussKnowledgeController extends BaseController {
 
 
 	/**
-	 * 知识库列表 页面跳转
+	 * 知识库列表 
 	 * 
 	 * @return
 	 */
-	@RequestMapping(params = "bussKnowledge")
+	@RequestMapping(params = "bussKnowledgeIframe")
 	public ModelAndView bussKnowledge(HttpServletRequest request) {
 		String typeid = request.getParameter("typeid");
 		request.setAttribute("typeid", typeid);
-//		List<TSTypegroup> typegroupList = systemService.findByProperty(TSTypegroup.class, "typegroupcode", "process");
-		List<TSTypegroup> typegroupList = systemService.findHql(" from TSTypegroup where typegroupcode in ?", " ('Aproduct' , 'Bproduct') ");
+		List<TSTypegroup> typegroupList = systemService.findHql(" from TSTypegroup where typegroupcode in  ('Aproduct' , 'Bproduct') ");
 		request.setAttribute("typegroupList", typegroupList);
+		return new ModelAndView("com/service/bussKnowledgeIframe");
+	}
+	
+	/**
+	 * 页面跳转
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(params = "bussKnowledgeList")
+	public ModelAndView processList(HttpServletRequest request) {
+		String typeid = request.getParameter("typeid");
+		request.setAttribute("typeid", typeid);
 		return new ModelAndView("com/service/bussKnowledgeList");
+	}
+	
+	/**
+	 * 流程参数列表页面跳转
+	 * 
+	 * @return
+	 */
+	@RequestMapping(params = "knowledgeListTabs")
+	public ModelAndView processTabs(HttpServletRequest request) {
+		String processid = request.getParameter("processid");
+		request.setAttribute("processid", processid);
+		return new ModelAndView("workflow/process/processTabs");
 	}
 
 	/**
@@ -82,11 +106,16 @@ public class BussKnowledgeController extends BaseController {
 
 	@RequestMapping(params = "datagrid")
 	public void datagrid(BussKnowledgeEntity bussKnowledge,HttpServletRequest request, HttpServletResponse response, DataGrid dataGrid) {
+		String typeid = oConvertUtils.getString(request.getParameter("typeid"));
 		CriteriaQuery cq = new CriteriaQuery(BussKnowledgeEntity.class, dataGrid);
 		//查询条件组装器
 		org.jeecgframework.core.extend.hqlsearch.HqlGenerateUtil.installHql(cq, bussKnowledge, request.getParameterMap());
-		try{
 		//自定义追加查询条件
+		try{
+			if (StringUtil.isNotEmpty(typeid)) {
+				cq.eq("TSType.id", typeid);
+			}
+ 
 		}catch (Exception e) {
 			throw new BusinessException(e.getMessage());
 		}
@@ -206,6 +235,7 @@ public class BussKnowledgeController extends BaseController {
 			bussKnowledge = bussKnowledgeService.getEntity(BussKnowledgeEntity.class, bussKnowledge.getId());
 			req.setAttribute("bussKnowledgePage", bussKnowledge);
 		}
+		req.setAttribute("typeid", req.getParameter("typeid"));
 		return new ModelAndView("com/service/bussKnowledge-add");
 	}
 	/**
