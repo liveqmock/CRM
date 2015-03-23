@@ -1,4 +1,6 @@
 package com.service.controller;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,6 +14,7 @@ import org.jeecgframework.core.constant.Globals;
 import org.jeecgframework.core.util.MyBeanUtils;
 import org.jeecgframework.core.util.StringUtil;
 import org.jeecgframework.tag.core.easyui.TagUtil;
+import org.jeecgframework.web.system.pojo.base.TSTypegroup;
 import org.jeecgframework.web.system.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,7 +28,7 @@ import com.service.service.BussKnowledgeServiceI;
 /**   
  * @Title: Controller
  * @Description: 知识库
- * @author onlineGenerator
+ * @author caoliang
  * @date 2015-02-11 22:46:25
  * @version V1.0   
  *
@@ -60,6 +63,11 @@ public class BussKnowledgeController extends BaseController {
 	 */
 	@RequestMapping(params = "bussKnowledge")
 	public ModelAndView bussKnowledge(HttpServletRequest request) {
+		String typeid = request.getParameter("typeid");
+		request.setAttribute("typeid", typeid);
+//		List<TSTypegroup> typegroupList = systemService.findByProperty(TSTypegroup.class, "typegroupcode", "process");
+		List<TSTypegroup> typegroupList = systemService.findHql(" from TSTypegroup where typegroupcode in ?", " ('Aproduct' , 'Bproduct') ");
+		request.setAttribute("typegroupList", typegroupList);
 		return new ModelAndView("com/service/bussKnowledgeList");
 	}
 
