@@ -14,6 +14,7 @@
  <body>
   <t:formvalid formid="formobj" dialog="true" usePlugin="password" layout="table" action="bussKnowledgeController.do?doAdd" tiptype="1">
 					<input id="id" name="id" type="hidden" value="${bussKnowledgePage.id }">
+					<input id="id" name="typeid"   value="${bussKnowledgePage.typeid }">
 		<table style="width: 600px;" cellpadding="0" cellspacing="1" class="formtable">
 				<tr>
 					<td align="right">
